@@ -1,0 +1,109 @@
+---
+import IconMusic from "@/assets/icons/IconMusic.svg";
+import IconMusicOff from "@/assets/icons/IconMusicOff.svg";
+import canonMp3 from "../../music/canon.mp3";
+
+const musicSrc = canonMp3;
+---
+
+<div id="music-player" class="fixed inset-e-4 top-4 z-50 max-lg:top-24">
+  <div class="group relative flex flex-col items-end">
+    <button
+      id="music-toggle"
+      type="button"
+      title="Toggle background music"
+      aria-label="Toggle background music"
+      aria-pressed="false"
+      class="focus-outline border-border bg-background text-foreground hover:text-accent flex size-10 items-center justify-center rounded-full border p-2 shadow-sm backdrop-blur transition-colors"
+    >
+      <IconMusic id="music-icon" class="size-6" />
+      <IconMusicOff id="music-off-icon" class="hidden size-6" />
+    </button>
+    <div
+      id="music-volume-wrap"
+      class="pointer-events-none absolute top-full pt-2 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
+    >
+      <div class="border-border bg-background rounded-lg border p-2 shadow-sm">
+        <input
+          id="music-volume"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value="0.7"
+          aria-label="Music volume"
+          class="accent-accent h-1.5 w-24 cursor-pointer"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio
+  id="music-audio"
+  src={musicSrc}
+  loop
+  preload="auto"
+  transition:persist="music-audio"></audio>
+
+<script>
+  function initMusicPlayer() {
+    const audio = document.getElementById(
+      "music-audio"
+    ) as HTMLAudioElement | null;
+    const toggle = document.getElementById(
+      "music-toggle"
+    ) as HTMLButtonElement | null;
+    const volume = document.getElementById(
+      "music-volume"
+    ) as HTMLInputElement | null;
+
+    if (!audio || !toggle || !volume) return;
+    const audioEl: HTMLAudioElement = audio;
+
+    function syncIcon() {
+      const icon = document.getElementById("music-icon");
+      const iconOff = document.getElementById("music-off-icon");
+      const btn = document.getElementById("music-toggle");
+      if (!icon || !iconOff || !btn) return;
+      const isPaused = audioEl.paused || audioEl.ended;
+      icon.classList.toggle("hidden", isPaused);
+      iconOff.classList.toggle("hidden", !isPaused);
+      btn.setAttribute("aria-pressed", String(!isPaused));
+    }
+
+    // Restore saved volume
+    const savedVolume = localStorage.getItem("music-volume");
+    if (savedVolume !== null) {
+      audioEl.volume = Number(savedVolume);
+      volume.value = String(Number(savedVolume));
+    }
+
+    toggle.addEventListener("click", () => {
+      if (audioEl.paused) {
+        audioEl.play();
+      } else {
+        audioEl.pause();
+      }
+    });
+
+    volume.addEventListener("input", () => {
+      audioEl.volume = Number(volume.value);
+      localStorage.setItem("music-volume", volume.value);
+    });
+
+    // Bind state listeners and try autoplay only once (audio element persists
+    // across View Transitions, so its listeners must not be duplicated).
+    if (!audioEl.dataset.bound) {
+      audioEl.dataset.bound = "true";
+      audioEl.addEventListener("play", syncIcon);
+      audioEl.addEventListener("pause", syncIcon);
+      audioEl.play().catch(() => {});
+    }
+
+    syncIcon();
+  }
+
+  initMusicPlayer();
+  document.addEventListener("astro:after-swap", initMusicPlayer);
+</script>

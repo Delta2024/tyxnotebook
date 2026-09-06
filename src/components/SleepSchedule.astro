@@ -1,0 +1,69 @@
+---
+import zuoxi from "../../zuoxi.json";
+
+type SleepRecord = {
+  date: string;
+  bedtime: string;
+  wakeup: string;
+  duration: string;
+};
+
+const records = [...(zuoxi.sleepRecords ?? [])].sort((a, b) =>
+  a.date.localeCompare(b.date)
+);
+
+function parseTime(time: string): number | null {
+  const m = time.match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+}
+
+function formatDuration(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h > 0 && m > 0) return `${h}h ${m}m`;
+  if (h > 0) return `${h}h`;
+  return `${m}m`;
+}
+
+function computeDuration(record: SleepRecord): string {
+  const bedtime = parseTime(record.bedtime);
+  const wakeup = parseTime(record.wakeup);
+  if (bedtime === null || wakeup === null) return "—";
+  let duration = wakeup - bedtime;
+  if (duration <= 0) duration += 24 * 60;
+  return formatDuration(duration);
+}
+---
+
+<section class="mt-8">
+  <h2>作息</h2>
+  <p class="text-sm italic opacity-75">每日作息记录（睡眠时长自动计算）</p>
+
+  {
+    records.length > 0 ? (
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>就寝</th>
+            <th>起床</th>
+            <th>时长</th>
+          </tr>
+        </thead>
+        <tbody>
+          {records.map(record => (
+            <tr>
+              <td>{record.date}</td>
+              <td>{record.bedtime || "—"}</td>
+              <td>{record.wakeup || "—"}</td>
+              <td>{computeDuration(record)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p class="text-muted-foreground italic">暂无作息记录。</p>
+    )
+  }
+</section>
