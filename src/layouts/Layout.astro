@@ -6,6 +6,7 @@ import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 import MusicPlayer from "@/components/MusicPlayer.astro";
+import CursorFollower from "@/components/CursorFollower.astro";
 import "@/styles/global.css";
 
 type Props = {
@@ -122,8 +123,10 @@ const rssHref = getRelativeLocaleUrl(
   >
     <slot />
     <MusicPlayer />
+    <CursorFollower />
     <script>
       import "@/scripts/theme";
+      import "@/scripts/smoothScroll";
     </script>
   </body>
 </html>

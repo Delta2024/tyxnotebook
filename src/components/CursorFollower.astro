@@ -1,0 +1,55 @@
+---
+---
+
+<div
+  id="cursor-follower"
+  aria-hidden="true"
+  class="pointer-events-none fixed top-0 left-0 z-[60] size-12 rounded-full border-2"
+  style="border-color: #8fffd8; box-shadow: 0 0 10px 1px rgba(143, 255, 216, 0.45);"
+>
+</div>
+
+<script>
+  function initCursorFollower() {
+    const dot = document.getElementById(
+      "cursor-follower"
+    ) as HTMLDivElement | null;
+    if (!dot) return;
+    if (dot.dataset.bound) return;
+    dot.dataset.bound = "true";
+
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    if (!fine) {
+      dot.style.display = "none";
+      return;
+    }
+
+    const el: HTMLDivElement = dot;
+
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+    let currentX = targetX;
+    let currentY = targetY;
+
+    function onMove(e: MouseEvent) {
+      targetX = e.clientX;
+      targetY = e.clientY;
+    }
+
+    const size = el.offsetWidth / 2;
+
+    function loop() {
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+      el.style.transform = `translate(${currentX - size}px, ${currentY - size}px)`;
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    el.style.transform = `translate(${currentX - size}px, ${currentY - size}px)`;
+    requestAnimationFrame(loop);
+  }
+
+  initCursorFollower();
+  document.addEventListener("astro:after-swap", initCursorFollower);
+</script>

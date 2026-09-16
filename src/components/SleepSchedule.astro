@@ -36,34 +36,29 @@ function computeDuration(record: SleepRecord): string {
 }
 ---
 
-<section class="mt-8">
-  <h2>作息</h2>
-  <p class="text-sm italic opacity-75">每日作息记录（睡眠时长自动计算）</p>
-
-  {
-    records.length > 0 ? (
-      <table class="w-full">
-        <thead>
+{
+  records.length > 0 ? (
+    <table class="w-full">
+      <thead>
+        <tr>
+          <th>日期</th>
+          <th>就寝</th>
+          <th>起床</th>
+          <th>时长</th>
+        </tr>
+      </thead>
+      <tbody>
+        {records.map(record => (
           <tr>
-            <th>日期</th>
-            <th>就寝</th>
-            <th>起床</th>
-            <th>时长</th>
+            <td>{record.date}</td>
+            <td>{record.bedtime || "—"}</td>
+            <td>{record.wakeup || "—"}</td>
+            <td>{computeDuration(record)}</td>
           </tr>
-        </thead>
-        <tbody>
-          {records.map(record => (
-            <tr>
-              <td>{record.date}</td>
-              <td>{record.bedtime || "—"}</td>
-              <td>{record.wakeup || "—"}</td>
-              <td>{computeDuration(record)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    ) : (
-      <p class="text-muted-foreground italic">暂无作息记录。</p>
-    )
-  }
-</section>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <p class="text-muted-foreground italic">暂无作息记录。</p>
+  )
+}

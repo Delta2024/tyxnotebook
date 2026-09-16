@@ -1,0 +1,99 @@
+---
+const sections = [
+  { id: "intro", label: "简介" },
+  { id: "timeline", label: "编年史" },
+  { id: "schedule", label: "作息时间" },
+];
+---
+
+<div
+  id="about-mobile-nav"
+  class="border-border bg-background/85 sticky top-0 z-30 -mx-4 mb-8 border-b px-4 py-2.5 backdrop-blur lg:hidden"
+>
+  <nav aria-label="关于页板块导航" class="flex gap-1 overflow-x-auto">
+    {
+      sections.map(section => (
+        <a
+          href={`#${section.id}`}
+          data-nav-link={section.id}
+          class="nav-link-mobile text-muted-foreground hover:text-foreground rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition-colors"
+        >
+          {section.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+
+<nav
+  aria-label="关于页板块导航"
+  class="fixed start-8 top-1/2 z-40 hidden -translate-y-1/2 lg:block"
+>
+  <ul class="space-y-3">
+    {
+      sections.map(section => (
+        <li>
+          <a
+            href={`#${section.id}`}
+            data-nav-link={section.id}
+            class="nav-link group text-muted-foreground hover:text-foreground flex items-center gap-2.5 text-sm transition-colors"
+          >
+            <span class="dot bg-muted-foreground/50 group-hover:bg-accent inline-block size-2 rounded-full transition-all" />
+            {section.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .nav-link[aria-current="true"] {
+    color: var(--color-foreground);
+  }
+
+  .nav-link[aria-current="true"] .dot {
+    background: var(--color-accent);
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  .nav-link-mobile[aria-current="true"] {
+    color: var(--color-accent-foreground);
+    background: var(--color-accent);
+  }
+</style>
+
+<script>
+  function initAboutNav() {
+    const links = document.querySelectorAll("[data-nav-link]");
+    if (!links.length) return;
+
+    const setActive = (id: string) => {
+      links.forEach(link => {
+        if (link.getAttribute("data-nav-link") === id) {
+          link.setAttribute("aria-current", "true");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+
+    ["intro", "timeline", "schedule"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+
+  initAboutNav();
+  document.addEventListener("astro:after-swap", initAboutNav);
+</script>
