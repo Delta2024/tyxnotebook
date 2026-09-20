@@ -6,10 +6,13 @@ type Props = {
   label?: string;
 };
 
-const {
-  endpoint = "https://my-blog-likes.delta2024.workers.dev",
-  label = "Like this site",
-} = Astro.props;
+// 线上走同域的 Pages Function 代理（workers.dev 在国内被墙）；
+// 本地开发直连 worker，需要开代理。
+const defaultEndpoint = import.meta.env.DEV
+  ? "https://my-blog-likes.delta2024.workers.dev"
+  : `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}api/likes`;
+
+const { endpoint = defaultEndpoint, label = "Like this site" } = Astro.props;
 ---
 
 <div
@@ -137,8 +140,9 @@ const {
 
     async function loadCount() {
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(`${endpoint}?t=${Date.now()}`, {
           headers: { Accept: "application/json" },
+          cache: "no-store",
         });
         if (!res.ok) throw new Error(String(res.status));
         const data = (await res.json()) as { likes?: number };
@@ -147,7 +151,9 @@ const {
           ready = true;
           render();
         }
-      } catch {
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("[like] loadCount failed:", err);
         countElement.textContent = "—";
       }
     }
@@ -164,9 +170,10 @@ const {
       popIcon();
 
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(`${endpoint}?t=${Date.now()}`, {
           method: "POST",
           headers: { Accept: "application/json" },
+          cache: "no-store",
         });
         if (!res.ok) throw new Error(String(res.status));
         const data = (await res.json()) as { likes?: number };
@@ -175,7 +182,9 @@ const {
           ready = true;
           render();
         }
-      } catch {
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("[like] POST failed:", err);
         count = ready ? count - 1 : 0;
         render();
       } finally {
