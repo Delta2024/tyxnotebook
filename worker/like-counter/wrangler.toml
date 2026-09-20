@@ -1,0 +1,7 @@
+name = "my-blog-likes"
+main = "src/index.js"
+compatibility_date = "2026-09-20"
+
+[[kv_namespaces]]
+binding = "LIKES_KV"
+id = "8ab67c3d6cb246c1997d2c877fb412a0"

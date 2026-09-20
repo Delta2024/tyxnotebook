@@ -7,6 +7,9 @@ import Footer from "@/components/Footer.astro";
 import AboutNav from "@/components/AboutNav.astro";
 import SleepSchedule from "@/components/SleepSchedule.astro";
 import IconMail from "@/assets/icons/IconMail.svg";
+import serifRegular from "@/assets/fonts/noto-serif-sc-400.woff2?url";
+import serifBold from "@/assets/fonts/noto-serif-sc-700.woff2?url";
+import kaiRegular from "@/assets/fonts/lxgw-wenkai-400.woff2?url";
 import config from "@/config";
 
 const about = await getEntry("pages", "about");
@@ -24,7 +27,10 @@ const timeline = [
     date: "2001年10月19日",
     desc: "这一天是阴历九月初三，我出生于新疆阿克苏。",
   },
-  { date: "2008年9月", desc: "我已经回到了家乡南阳，因为基础不好，在乡下小学重新读一年级，此后一直到2024年6月我从未去过新疆。" },
+  {
+    date: "2008年9月",
+    desc: "我已经回到了家乡南阳，因为基础不好，在乡下小学重新读一年级，此后一直到2024年6月我从未去过新疆。",
+  },
   {
     date: "2012年9月",
     desc: "我进入汉冢中学开始寄宿式上学，周一上学，周五放学，那一刻我的世界突然变大了。",
@@ -46,11 +52,26 @@ const timeline = [
   },
   { date: "2020年2月", desc: "新冠疫情已经爆发，随后国务院宣布高考延期。" },
   { date: "2020年7月8日", desc: "高考结束，高中生涯彻底终结。" },
-  { date: "2020年9月", desc: "我进入河南科技大学，结识了qcc，yhr，ll，bmw和我在同一所大学。" },
-  { date: "2024年6月4日", desc: "上午我完成了毕业答辩，答辩题目是《一维逆安德森局域化相变研究》。" },
-  { date: "2024年6月19日", desc: "时隔16年，我再一次来到新疆，尽管住的地方不再是我出生的地方，但这里有我父母奋斗的影子！" },
-  { date: "2025年9月", desc: "我进入深圳大学，结识了ljx，txk，dx，gwy，xsl，hyw等众多同学。" },
-  { date: "2025年10月", desc: "ljx和txk带我入坑台球，此后台球成为我的一大爱好。" },
+  {
+    date: "2020年9月",
+    desc: "我进入河南科技大学，结识了qcc，yhr，ll，bmw和我在同一所大学。",
+  },
+  {
+    date: "2024年6月4日",
+    desc: "上午我完成了毕业答辩，答辩题目是《一维逆安德森局域化相变研究》。",
+  },
+  {
+    date: "2024年6月19日",
+    desc: "时隔16年，我再一次来到新疆，尽管住的地方不再是我出生的地方，但这里有我父母奋斗的影子！",
+  },
+  {
+    date: "2025年9月",
+    desc: "我进入深圳大学，结识了ljx，txk，dx，gwy，xsl，hyw等众多同学。",
+  },
+  {
+    date: "2025年10月",
+    desc: "ljx和txk带我入坑台球，此后台球成为我的一大爱好。",
+  },
 ];
 
 function parseYear(date: string): number {
@@ -87,23 +108,51 @@ const bgColumnCount = 5;
   ogImage={about.data.ogImage}
   canonicalURL={about.data.canonicalURL}
 >
+  <Fragment slot="head">
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={serifRegular}
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={serifBold}
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={kaiRegular}
+      crossorigin="anonymous"
+    />
+  </Fragment>
+
   <Header />
 
   <section
-    class="relative isolate flex min-h-[calc(100svh-6rem)] w-full flex-col justify-start overflow-hidden pt-16"
+    class="relative isolate flex min-h-[calc(100svh-6rem)] w-full flex-col justify-center overflow-hidden pt-16 pb-20"
   >
     <div
       aria-hidden="true"
-      class="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center select-none"
+      class="hero-glow pointer-events-none absolute inset-0 -z-10"
     >
-      <div
-        class="text-muted flex -rotate-[18deg] gap-24 whitespace-nowrap opacity-60"
-        style="font-size: 7rem; font-weight: 700; letter-spacing: 0.05em;"
-      >
+    </div>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden select-none"
+    >
+      <div class="watermark flex -rotate-[18deg] gap-24 whitespace-nowrap">
         {
           Array.from({ length: bgColumnCount }).map(() => (
             <div class="flex flex-col gap-16">
-              {bgLines.map(line => <span>{line}</span>)}
+              {bgLines.map(line => (
+                <span>{line}</span>
+              ))}
             </div>
           ))
         }
@@ -111,30 +160,19 @@ const bgColumnCount = 5;
     </div>
 
     <div class="app-layout">
-      <h1 class="text-2xl font-semibold sm:text-3xl">{title}</h1>
-      <div
-        class="mt-6"
-        style="font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', sans-serif; line-height: 1.9;"
-      >
-        <p class="text-foreground m-0" style="font-size: 13pt;">你好，</p>
-        <p
-          class="text-[#0d9488] dark:text-[#7fffd4] m-0 my-2 font-bold"
-          style="font-size: 26pt;"
-        >
-          我叫田勇新
-        </p>
-        <p class="text-foreground m-0" style="font-size: 15pt;">
+      <div class="hero-inner">
+        <p class="hero-kicker">ABOUT / 关于我</p>
+        <h1 class="hero-title">
+          <span class="hero-hello">你好，我是</span>
+          <span class="hero-name">田勇新</span>
+        </h1>
+        <p class="hero-lead">
           我是一个十分随和的男生，与一般的理工男一样平时沉默寡言，只有和比较熟悉的同学在一起才会说很多话。我喜欢打台球，目前二档水平，正在努力中.......此外，我正在尝试吹笛子，我认为笛子是一件十分优雅的乐器，学习成本适中，优美且动听。如果你对于这个网站的一些东西感兴趣，欢迎与我联系！
         </p>
-        <p
-          class="text-foreground mt-4 mb-0 flex items-center justify-center gap-2"
-          style="font-size: 15pt;"
-        >
-          <IconMail class="size-6 shrink-0" />
-          <a href="mailto:delta2024@163.com" style="color: inherit;">
-            delta2024@163.com
-          </a>
-        </p>
+        <a class="hero-mail" href="mailto:delta2024@163.com">
+          <IconMail class="size-5 shrink-0" />
+          <span>delta2024@163.com</span>
+        </a>
       </div>
     </div>
   </section>
@@ -142,75 +180,79 @@ const bgColumnCount = 5;
   <Main class="app-prose">
     <AboutNav />
 
-    <section id="intro" class="flex min-h-[calc(100svh-6rem)] scroll-mt-8 flex-col justify-start pt-16">
-      <h2 style="font-size: 2.25rem;">简介</h2>
-      <p>
-        我是应用物理学专业出身，起初是打算攻读物理学博士学位，随后因为能力问题和身体素质问题转向工科
-        专业发展。我喜欢使用各种AI工具，去体会新兴科技带给我们的便利，未来我的职业发展可能是光学工程
-        师、AI工程师（不太确定-_-）
+    <section id="intro" class="about-section">
+      <header class="section-head">
+        <span class="section-num">01</span>
+        <h2 class="section-title">简介</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+
+      <p class="section-lead">
+        我是应用物理学专业出身，起初是打算攻读物理学博士学位，随后因为能力问题和身体素质问题转向工科专业发展。我喜欢使用各种AI工具，去体会新兴科技带给我们的便利，未来我的职业发展可能是光学工程师、AI工程师（不太确定-_-）
       </p>
-      <p
-        class="text-[#0d9488] dark:text-[#7fffd4]"
-        style="font-size: 1.50rem;"
-      >
-        以下是我的教育经历
-      </p>
-      <ul>
-        <li>
-          <strong>本科</strong>：河南科技大学（2020 – 2024），应用物理学
+
+      <p class="section-note">以下是我的教育经历</p>
+
+      <ul class="edu-list">
+        <li class="edu-item">
+          <span class="edu-degree">本科</span>
+          <div class="edu-info">
+            <span class="edu-school">河南科技大学</span>
+            <span class="edu-major">应用物理学</span>
+          </div>
+          <span class="edu-year">2020 – 2024</span>
         </li>
-        <li>
-          <strong>硕士</strong>：深圳大学（2025 – 至今），光电信息工程
+        <li class="edu-item">
+          <span class="edu-degree">硕士</span>
+          <div class="edu-info">
+            <span class="edu-school">深圳大学</span>
+            <span class="edu-major">光电信息工程</span>
+          </div>
+          <span class="edu-year">2025 – 至今</span>
         </li>
-        <li><strong>爱好</strong>：打台球、吹笛子、捯饬电脑</li>
       </ul>
+
+      <div class="interest-block">
+        <span class="interest-label">爱好</span>
+        <ul class="interest-tags">
+          <li class="interest-tag">打台球</li>
+          <li class="interest-tag">吹笛子</li>
+          <li class="interest-tag">捯饬电脑</li>
+        </ul>
+      </div>
     </section>
 
-    <section id="timeline" class="mt-12 scroll-mt-8">
-      <h2>编年史</h2>
-      <ol class="tl relative mt-8 list-none pl-0">
-        <div
-          aria-hidden="true"
-          class="tl-spine bg-border pointer-events-none absolute inset-y-0 w-1"
-        >
-        </div>
-        <svg
-          aria-hidden="true"
-          class="tl-arrow text-accent pointer-events-none absolute -top-3.5"
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-        >
-          <path d="M7 0 L14 14 L0 14 Z" fill="currentColor"></path>
-        </svg>
-        {
-          timelineDesc.map((item, i) => (
-            <li
-              class:list={["relative my-0 flex items-start gap-x-4 pl-0"]}
-              style={`margin-top: ${timelineGaps[i]}px`}
-            >
-              <time class="text-muted-foreground w-32 shrink-0 text-right text-sm leading-snug whitespace-nowrap">
-                {item.date}
-              </time>
-              <span class="bg-accent mt-1.5 size-2.5 shrink-0 rounded-full" />
-              <div class="flex flex-1 items-start gap-2">
-                <span
-                  class="text-accent mt-0.5 leading-snug select-none"
-                  aria-hidden="true"
-                >
-                  →
-                </span>
-                <p class="m-0">{item.desc}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+    <section id="timeline" class="about-section">
+      <header class="section-head">
+        <span class="section-num">02</span>
+        <h2 class="section-title">编年史</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+
+      <div class="tl-wrap">
+        <span aria-hidden="true" class="tl-arrow">
+          <span class="tl-arrow-body"></span>
+        </span>
+        <ol class="tl">
+          {
+            timelineDesc.map((item, i) => (
+              <li class="tl-item" style={`margin-top: ${timelineGaps[i]}px`}>
+                <time class="tl-date">{item.date}</time>
+                <p class="tl-text">{item.desc}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
     </section>
 
-    <section id="schedule" class="mt-12 scroll-mt-8">
-      <h2>作息时间</h2>
-      <p class="text-sm italic opacity-75">每日作息记录（睡眠时长自动计算）</p>
+    <section id="schedule" class="about-section">
+      <header class="section-head">
+        <span class="section-num">03</span>
+        <h2 class="section-title">作息时间</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+      <p class="section-sub">每日作息记录（睡眠时长自动计算）</p>
       <SleepSchedule />
     </section>
   </Main>
@@ -219,93 +261,522 @@ const bgColumnCount = 5;
 </Layout>
 
 <style>
-  .tl {
-    --spine-x: calc(9rem + 5px);
+  /* ---------- Hero ---------- */
+  .hero-glow {
+    background:
+      radial-gradient(
+        60rem 32rem at 12% 8%,
+        color-mix(in srgb, var(--color-accent) 10%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        44rem 26rem at 92% 96%,
+        color-mix(in srgb, var(--color-accent) 7%, transparent),
+        transparent 62%
+      );
   }
 
-  .tl-spine,
-  .tl-arrow {
-    left: var(--spine-x);
-    transform: translateX(-50%);
+  .watermark {
+    font-family: var(--font-serif-cn);
+    font-size: 7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-foreground);
+    opacity: 0.045;
+    -webkit-mask-image: radial-gradient(
+      ellipse at center,
+      #000 8%,
+      transparent 72%
+    );
+    mask-image: radial-gradient(ellipse at center, #000 8%, transparent 72%);
   }
 
-  .tl li time,
-  .tl li p {
-    transition:
-      transform 0.2s ease,
-      color 0.2s ease,
-      text-shadow 0.2s ease;
+  .hero-inner {
+    max-width: 44rem;
   }
 
-  .tl li time {
-    transform-origin: right center;
+  .hero-kicker {
+    margin: 0;
+    font-family: var(--font-app);
+    font-size: 0.78rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
   }
 
-  .tl li p {
-    transform-origin: left center;
+  .hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12em;
+    margin: 0.85rem 0 0;
+    font-family: var(--font-serif-cn);
   }
 
-  .tl li.is-active time,
-  .tl li.is-active p {
-    transform: scale(1.3);
-    color: var(--color-accent);
-    text-shadow: 0 0 10px
-      color-mix(in srgb, var(--color-accent) 60%, transparent);
+  .hero-hello {
+    font-size: clamp(1rem, 2.4vw, 1.35rem);
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    color: var(--color-muted-foreground);
   }
 
-  /* Pulse travelling bottom → top. Travel distance is expressed as a
-     percentage of the spine height, so it scales automatically when the
-     timeline grows longer. */
-  .tl-spine::after {
+  .hero-name {
+    position: relative;
+    display: inline-block;
+    width: fit-content;
+    font-size: clamp(2.9rem, 9vw, 5rem);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: 0.04em;
+    color: var(--color-foreground);
+  }
+
+  .hero-name::after {
     content: "";
     position: absolute;
-    inset-inline: 0;
-    top: 100%;
-    height: 4rem;
+    left: 0.06em;
+    right: 0.06em;
+    bottom: -0.14em;
+    height: 3px;
     border-radius: 9999px;
     background: linear-gradient(
-      to top,
-      transparent,
-      color-mix(in srgb, var(--color-accent) 55%, #ffffff),
+      90deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 15%, transparent)
+    );
+  }
+
+  .hero-lead {
+    margin: 2.25rem 0 0;
+    max-width: 38rem;
+    font-family: var(--font-serif-cn);
+    font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+    line-height: 2.05;
+    letter-spacing: 0.012em;
+    color: color-mix(in srgb, var(--color-foreground) 86%, transparent);
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+
+  .hero-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+    padding: 0.6rem 1.15rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    font-family: var(--font-app);
+    font-size: 0.92rem;
+    color: var(--color-foreground);
+    background: color-mix(in srgb, var(--color-background) 72%, transparent);
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .hero-mail:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px
+      color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+
+  /* ---------- Section headers ---------- */
+  .about-section {
+    margin-top: clamp(4.5rem, 11vh, 8.5rem);
+    scroll-margin-top: 6rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-bottom: 1.9rem;
+  }
+
+  .section-num {
+    font-family: var(--font-app);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: var(--color-accent);
+  }
+
+  .section-title {
+    margin: 0;
+    font-family: var(--font-serif-cn);
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-foreground);
+  }
+
+  .section-rule {
+    flex: 1;
+    align-self: center;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-muted-foreground) 42%, transparent),
       transparent
     );
-    filter: drop-shadow(
-      0 0 6px color-mix(in srgb, var(--color-accent) 70%, #ffffff)
+  }
+
+  .section-sub {
+    margin: -0.9rem 0 1.1rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-muted-foreground);
+  }
+
+  /* ---------- Intro ---------- */
+  .section-lead {
+    margin: 0;
+    max-width: 42rem;
+    font-family: var(--font-serif-cn);
+    font-size: 1.02rem;
+    line-height: 2.05;
+    letter-spacing: 0.012em;
+    color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+
+  .section-note {
+    margin: 2.4rem 0 0;
+    font-family: var(--font-serif-cn);
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+  }
+
+  .edu-list {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .edu-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem 1.35rem;
+    overflow: hidden;
+    padding: 1.05rem 1.35rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--color-muted) 22%, transparent);
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .edu-item::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 3px;
+    background: linear-gradient(
+      to bottom,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 10%, transparent)
     );
-    opacity: 0;
-    animation: tl-pulse 1.7s ease-in-out infinite;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.35s ease;
+  }
+
+  .edu-item:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent) 45%,
+      var(--color-border)
+    );
+    transform: translateX(3px);
+    box-shadow: 0 10px 26px
+      color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+
+  .edu-item:hover::before {
+    transform: scaleY(1);
+  }
+
+  .edu-degree {
+    font-family: var(--font-serif-cn);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    color: var(--color-accent);
+  }
+
+  .edu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+
+  .edu-school {
+    font-family: var(--font-serif-cn);
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-foreground);
+  }
+
+  .edu-major {
+    font-family: var(--font-serif-cn);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: var(--color-muted-foreground);
+  }
+
+  .edu-year {
+    font-family: var(--font-app);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-foreground);
+  }
+
+  .interest-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 1.6rem;
+  }
+
+  .interest-label {
+    font-family: var(--font-serif-cn);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+  }
+
+  .interest-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .interest-tag {
+    padding: 0.32rem 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    font-family: var(--font-serif-cn);
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    color: var(--color-foreground);
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .interest-tag:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  }
+
+  /* ---------- Timeline ---------- */
+  .tl-wrap {
+    --spine-x: calc(8rem + 0.625rem);
+    position: relative;
+    display: flow-root;
+  }
+
+  .tl-arrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--spine-x);
+    width: 12px;
+    transform: translateX(-50%);
     pointer-events: none;
   }
 
-  @keyframes tl-pulse {
-    0% {
-      top: 100%;
-      transform: translateY(-100%);
+  .tl-arrow-body {
+    position: absolute;
+    inset: 0;
+    background: var(--color-foreground);
+    opacity: 0.7;
+    clip-path: polygon(
+      50% 0,
+      calc(50% + 5px) 28px,
+      calc(50% + 3px) 28px,
+      calc(50% + 3px) 100%,
+      calc(50% - 3px) 100%,
+      calc(50% - 3px) 28px,
+      calc(50% - 5px) 28px
+    );
+  }
+
+  .tl {
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 0;
+  }
+
+  .tl-date {
+    width: 8rem;
+    flex: none;
+    padding-top: 0.32rem;
+    font-family: var(--font-kai-cn);
+    font-size: 1rem;
+    line-height: 1.7;
+    letter-spacing: 0.05em;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-foreground);
+    transition:
+      color 0.3s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      text-shadow 0.3s ease;
+  }
+
+  .tl-text {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    padding-top: 0.2rem;
+    font-family: var(--font-kai-cn);
+    font-size: 1.15rem;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+    text-align: justify;
+    text-justify: inter-ideograph;
+    transition:
+      color 0.3s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.3s ease;
+  }
+
+  .tl-item.is-active .tl-date {
+    color: var(--color-accent);
+    transform: scale(1.3);
+    transform-origin: right center;
+    text-shadow: 0 0 24px
+      color-mix(in srgb, var(--color-accent) 70%, transparent);
+  }
+
+  .tl-item.is-active .tl-text {
+    color: var(--color-foreground);
+    transform: scale(1.3);
+    transform-origin: left center;
+    filter: brightness(1.22);
+    text-shadow: 0 0 26px
+      color-mix(in srgb, var(--color-foreground) 55%, transparent);
+  }
+
+  @media (max-width: 640px) {
+    .tl-item.is-active .tl-date {
+      transform: scale(1.6);
+    }
+    .tl-item.is-active .tl-text {
+      transform: scale(1.5);
+    }
+  }
+
+  /* ---------- Motion ---------- */
+  .hero-kicker,
+  .hero-title,
+  .hero-lead,
+  .hero-mail {
+    animation: hero-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-title {
+    animation-delay: 0.1s;
+  }
+  .hero-lead {
+    animation-delay: 0.22s;
+  }
+  .hero-mail {
+    animation-delay: 0.34s;
+  }
+
+  @keyframes hero-in {
+    from {
       opacity: 0;
+      transform: translateY(18px);
     }
-    15% {
+    to {
       opacity: 1;
+      transform: none;
     }
-    85% {
-      opacity: 1;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .tl-item {
+        animation: tl-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 26%;
+      }
     }
-    100% {
-      top: 0;
-      transform: translateY(0);
+  }
+
+  @keyframes tl-reveal {
+    from {
       opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .edu-item {
+      grid-template-columns: auto 1fr;
+    }
+    .edu-year {
+      grid-column: 1 / -1;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tl-spine::after {
+    .hero-kicker,
+    .hero-title,
+    .hero-lead,
+    .hero-mail,
+    .tl-item {
       animation: none;
-      opacity: 0;
     }
   }
 </style>
 
 <script>
-  import { getLenis, setVirtualScrollInterceptor } from "@/scripts/smoothScroll";
+  import {
+    getLenis,
+    setVirtualScrollInterceptor,
+  } from "@/scripts/smoothScroll";
 
   let tlRaf = 0;
   let tlBound = false;
@@ -381,9 +852,7 @@ const bgColumnCount = 5;
 
     const section = document.getElementById("timeline");
     if (!section) return true;
-    const items = Array.from(
-      section.querySelectorAll("li")
-    ) as HTMLElement[];
+    const items = Array.from(section.querySelectorAll("li")) as HTMLElement[];
     if (items.length < 2) return true;
 
     const refLine = window.innerHeight * 0.5;

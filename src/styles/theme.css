@@ -8,6 +8,18 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --font-app: var(--font-google-sans-code);
+  --font-serif: var(--font-serif-cn);
+}
+
+/* CJK-friendly serif stack. `Noto Serif SC` is self-hosted (see fonts.css);
+   the rest are local fallbacks so text still renders offline before the
+   webfont loads. */
+:root {
+  --font-serif-cn:
+    "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun",
+    "Noto Serif CJK SC", serif;
+  --font-kai-cn:
+    "LXGW WenKai", "Kaiti SC", "STKaiti", "KaiTi", "KaiTi_GB2312", serif;
 }
 
 /* Light theme values */

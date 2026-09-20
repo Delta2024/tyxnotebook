@@ -1,0 +1,34 @@
+/*
+ * Self-hosted, character-subsetted Noto Serif SC (思源宋体).
+ *
+ * The glyphs were subset with pyftsubset to only the characters used across
+ * `src/`, keeping each weight under ~80 KB while remaining fully offline /
+ * China-friendly (no runtime Google Fonts request).
+ */
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/noto-serif-sc-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/noto-serif-sc-700.woff2") format("woff2");
+}
+
+/*
+ * LXGW WenKai (霞鹜文楷) — a Kai-style Chinese typeface used only for the
+ * timeline, so it reads visually distinct from the serif used elsewhere.
+ */
+@font-face {
+  font-family: "LXGW WenKai";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/lxgw-wenkai-400.woff2") format("woff2");
+}
