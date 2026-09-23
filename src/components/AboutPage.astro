@@ -1,0 +1,968 @@
+---
+import { getEntry } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import AboutNav from "@/components/AboutNav.astro";
+import SleepSchedule from "@/components/SleepSchedule.astro";
+import IconMail from "@/assets/icons/IconMail.svg";
+import serifRegular from "@/assets/fonts/noto-serif-sc-400.woff2?url";
+import serifBold from "@/assets/fonts/noto-serif-sc-700.woff2?url";
+import kaiRegular from "@/assets/fonts/lxgw-wenkai-400.woff2?url";
+import config from "@/config";
+
+const about = await getEntry("pages", "about");
+
+if (!about) {
+  throw new Error(
+    "Missing content entry: `about.md` or `about.mdx` in `src/content/pages/`"
+  );
+}
+
+const { title, description } = about.data;
+
+const timeline = [
+  {
+    date: "2001年10月19日",
+    desc: "这一天是阴历九月初三，我出生了。",
+  },
+  {
+    date: "2008年9月",
+    desc: "我因为基础不好，在乡下小学重新读一年级。",
+  },
+  {
+    date: "2012年9月",
+    desc: "我进入汉冢中学开始寄宿式上学，周一上学，周五放学，那一刻我的世界突然变大了。",
+  },
+  {
+    date: "2013年9月",
+    desc: "我进入六年级，结识了yhj。",
+  },
+  {
+    date: "2014年9月",
+    desc: "我正式开始“中学生活”，更多别的村子的人进入中学学习。其中我结识了 dpj、dsj、gdx 等众多好友。",
+  },
+  { date: "2015年9月", desc: "我结识了 bmw。" },
+  { date: "2016年9月", desc: "我进入初三，为了考取南阳五中而努力。" },
+  { date: "2017年6月25日", desc: "我参加中考。" },
+  {
+    date: "2017年9月",
+    desc: "我以 552 的中考成绩（494 文化 + 58 体育）考取南阳八中。bmw、dsj 和我在同一所高中，其中 dsj 与我在同一班级（115 班）。",
+  },
+  { date: "2020年2月", desc: "新冠疫情已经爆发，随后国务院宣布高考延期。" },
+  { date: "2020年7月8日", desc: "高考结束，高中生涯彻底终结。" },
+  {
+    date: "2020年9月",
+    desc: "我进入河南科技大学，结识了qcc，yhr，ll，bmw和我在同一所大学。",
+  },
+  {
+    date: "2024年6月4日",
+    desc: "上午我完成了毕业答辩，答辩题目是《一维逆安德森局域化相变研究》。",
+  },
+  {
+    date: "2025年9月",
+    desc: "我进入深圳大学，结识了ljx，txk，dx，gwy，xsl，hyw等众多同学。",
+  },
+  {
+    date: "2025年10月",
+    desc: "ljx和txk带我入坑台球，此后台球成为我的一大爱好。",
+  },
+];
+
+function parseYear(date: string): number {
+  const m = date.match(/(\d{4})年(?:(\d{1,2})月(?:(\d{1,2})日)?)?/);
+  if (!m) return 0;
+  return (
+    Number(m[1]) + (Number(m[2] ?? 1) - 1) / 12 + (Number(m[3] ?? 1) - 1) / 365
+  );
+}
+
+const SCALE = 40;
+const MIN_GAP = 28;
+
+const timelineDesc = timeline
+  .map(item => ({ ...item, year: parseYear(item.date) }))
+  .sort((a, b) => b.year - a.year);
+
+const timelineGaps = timelineDesc.map((item, i) =>
+  i === 0
+    ? 0
+    : Math.max(
+        Math.round((timelineDesc[i - 1].year - item.year) * SCALE),
+        MIN_GAP
+      )
+);
+
+const bgLines = Array.from({ length: 18 }, () => "TIAN YONGXIN");
+const bgColumnCount = 5;
+---
+
+<Layout
+  title={`${title} | ${config.site.title}`}
+  description={description}
+  ogImage={about.data.ogImage}
+  canonicalURL={about.data.canonicalURL}
+>
+  <Fragment slot="head">
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={serifRegular}
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={serifBold}
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={kaiRegular}
+      crossorigin="anonymous"
+    />
+  </Fragment>
+
+  <Header />
+
+  <section
+    class="relative isolate flex min-h-[calc(100svh-6rem)] w-full flex-col justify-center overflow-hidden pt-16 pb-20"
+  >
+    <div
+      aria-hidden="true"
+      class="hero-glow pointer-events-none absolute inset-0 -z-10"
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden select-none"
+    >
+      <div class="watermark flex -rotate-[18deg] gap-24 whitespace-nowrap">
+        {
+          Array.from({ length: bgColumnCount }).map(() => (
+            <div class="flex flex-col gap-16">
+              {bgLines.map(line => (
+                <span>{line}</span>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="app-layout">
+      <div class="hero-inner">
+        <p class="hero-kicker">ABOUT / 关于我</p>
+        <h1 class="hero-title">
+          <span class="hero-hello">你好，我是</span>
+          <span class="hero-name">田勇新</span>
+        </h1>
+        <p class="hero-lead">
+          我是一个十分随和的男生，与一般的理工男一样平时沉默寡言，只有和比较熟悉的同学在一起才会说很多话。我喜欢打台球，目前二档水平，正在努力中.......此外，我正在尝试吹笛子，我认为笛子是一件十分优雅的乐器，学习成本适中，优美且动听。如果你对于这个网站的一些东西感兴趣，欢迎与我联系！
+        </p>
+        <a class="hero-mail" href="mailto:delta2024@163.com">
+          <IconMail class="size-5 shrink-0" />
+          <span>delta2024@163.com</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Main class="app-prose">
+    <AboutNav />
+
+    <section id="intro" class="about-section">
+      <header class="section-head">
+        <span class="section-num">01</span>
+        <h2 class="section-title">简介</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+
+      <p class="section-lead">
+        我是应用物理学专业出身，随后转向工科专业发展。我的研究方向是计算光场成像，这是计算成像领域比较火热的课题之一。
+        课余时间我喜欢捯饬一些小工具，尽管是一些没啥用的工具，但是在这个过程中也能学到很多。未来我的职业发展可能是光学工程师（不太确定-_-）
+      </p>
+
+      <div class="edu-layout">
+        <figure class="edu-portrait">
+          <img
+            src="/images/tyx.jpg"
+            alt="田勇新的照片"
+            width="640"
+            height="800"
+          />
+        </figure>
+        <div class="edu-content">
+          <p class="section-note">以下是我的教育经历</p>
+
+          <ul class="edu-list">
+            <li class="edu-item">
+              <div class="edu-head">
+                <span class="edu-degree">本科</span>
+                <span class="edu-school">河南科技大学</span>
+                <span class="edu-sep" aria-hidden="true"></span>
+                <span class="edu-major">应用物理学</span>
+                <span class="edu-year">2020-2024</span>
+              </div>
+              <ul class="edu-details">
+                <li>
+                  <span class="edu-detail-label">学习课程：</span>高等数学、半导体物理与器件、工程光学、数学物理方法
+                </li>
+                <li>具有扎实的数学物理基础，能够熟练使用Python语言编程</li>
+              </ul>
+            </li>
+            <li class="edu-item">
+              <div class="edu-head">
+                <span class="edu-degree">硕士</span>
+                <span class="edu-school">深圳大学</span>
+                <span class="edu-sep" aria-hidden="true"></span>
+                <span class="edu-major">光电信息工程</span>
+                <span class="edu-year">2025-2028</span>
+              </div>
+              <ul class="edu-details">
+                <li>
+                  <span class="edu-detail-label">学习课程：</span>傅里叶光学、机器视觉、光电子技术与应用
+                </li>
+                <li>具有显微成像的知识基础，能够熟练使用vibe coding编程</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="interest-block">
+        <span class="interest-label">爱好</span>
+        <ul class="interest-tags">
+          <li class="interest-tag">打台球</li>
+          <li class="interest-tag">吹笛子</li>
+          <li class="interest-tag">捯饬电脑</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="timeline" class="about-section">
+      <header class="section-head">
+        <span class="section-num">02</span>
+        <h2 class="section-title">编年史</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+
+      <div class="tl-wrap">
+        <span aria-hidden="true" class="tl-arrow">
+          <span class="tl-arrow-body"></span>
+        </span>
+        <ol class="tl">
+          {
+            timelineDesc.map((item, i) => (
+              <li class="tl-item" style={`margin-top: ${timelineGaps[i]}px`}>
+                <time class="tl-date">{item.date}</time>
+                <p class="tl-text">{item.desc}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section id="schedule" class="about-section">
+      <header class="section-head">
+        <span class="section-num">03</span>
+        <h2 class="section-title">作息时间</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+      <p class="section-sub">每日作息记录（睡眠时长自动计算）</p>
+      <SleepSchedule />
+    </section>
+  </Main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero-glow {
+    background:
+      radial-gradient(
+        60rem 32rem at 12% 8%,
+        color-mix(in srgb, var(--color-accent) 10%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        44rem 26rem at 92% 96%,
+        color-mix(in srgb, var(--color-accent) 7%, transparent),
+        transparent 62%
+      );
+  }
+
+  .watermark {
+    font-family: var(--font-serif-cn);
+    font-size: 7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-foreground);
+    opacity: 0.045;
+    -webkit-mask-image: radial-gradient(
+      ellipse at center,
+      #000 8%,
+      transparent 72%
+    );
+    mask-image: radial-gradient(ellipse at center, #000 8%, transparent 72%);
+  }
+
+  .hero-inner {
+    max-width: 44rem;
+  }
+
+  .hero-kicker {
+    margin: 0;
+    font-family: var(--font-app);
+    font-size: 0.78rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+  }
+
+  .hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12em;
+    margin: 0.85rem 0 0;
+    font-family: var(--font-serif-cn);
+  }
+
+  .hero-hello {
+    font-size: clamp(1rem, 2.4vw, 1.35rem);
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    color: var(--color-muted-foreground);
+  }
+
+  .hero-name {
+    position: relative;
+    display: inline-block;
+    width: fit-content;
+    font-size: clamp(2.9rem, 9vw, 5rem);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: 0.04em;
+    color: var(--color-foreground);
+  }
+
+  .hero-name::after {
+    content: "";
+    position: absolute;
+    left: 0.06em;
+    right: 0.06em;
+    bottom: -0.14em;
+    height: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 15%, transparent)
+    );
+  }
+
+  .hero-lead {
+    margin: 2.25rem 0 0;
+    max-width: 38rem;
+    font-family: var(--font-serif-cn);
+    font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+    line-height: 2.05;
+    letter-spacing: 0.012em;
+    color: color-mix(in srgb, var(--color-foreground) 86%, transparent);
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+
+  .hero-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+    padding: 0.6rem 1.15rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    font-family: var(--font-app);
+    font-size: 0.92rem;
+    color: var(--color-foreground);
+    background: color-mix(in srgb, var(--color-background) 72%, transparent);
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .hero-mail:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px
+      color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+
+  /* ---------- Section headers ---------- */
+  .about-section {
+    margin-top: clamp(4.5rem, 11vh, 8.5rem);
+    scroll-margin-top: 6rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-bottom: 1.9rem;
+  }
+
+  .section-num {
+    font-family: var(--font-app);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: var(--color-accent);
+  }
+
+  .section-title {
+    margin: 0;
+    font-family: var(--font-serif-cn);
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-foreground);
+  }
+
+  .section-rule {
+    flex: 1;
+    align-self: center;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-muted-foreground) 42%, transparent),
+      transparent
+    );
+  }
+
+  .section-sub {
+    margin: -0.9rem 0 1.1rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-muted-foreground);
+  }
+
+  /* ---------- Intro ---------- */
+  .section-lead {
+    margin: 0;
+    max-width: 42rem;
+    font-family: var(--font-serif-cn);
+    font-size: 1.02rem;
+    line-height: 2.05;
+    letter-spacing: 0.012em;
+    color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+
+  .section-note {
+    margin: 2.4rem 0 0;
+    font-family: var(--font-serif-cn);
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    color: var(--color-accent);
+  }
+
+  .edu-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2.5rem;
+    margin-top: 2.4rem;
+    width: min(80rem, calc(100vw - 3rem));
+    margin-inline: calc(50% - min(40rem, calc(50vw - 1.5rem)));
+  }
+
+  .edu-portrait {
+    flex: none;
+    width: 15rem;
+    margin: 0 0 0 12rem;
+    margin-top: 3rem;
+  }
+
+  .edu-portrait img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 0;
+    border-radius: 1rem;
+  }
+
+  .edu-content {
+    flex: 1;
+    min-width: 0;
+    max-width: 46rem;
+  }
+
+  .edu-content .section-note {
+    margin-top: 0;
+  }
+
+  @media (max-width: 800px) {
+    .edu-layout {
+      flex-direction: column;
+      gap: 1.75rem;
+      width: auto;
+      margin-inline: 0;
+    }
+    .edu-content {
+      max-width: none;
+    }
+    .edu-details li {
+      white-space: normal;
+    }
+  }
+
+  .edu-list {
+    display: grid;
+    gap: 2.2rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .edu-item {
+    position: relative;
+    padding-inline-start: 1.5rem;
+  }
+
+  .edu-item::before {
+    content: "";
+    position: absolute;
+    inset-block: 0.3rem;
+    inset-inline-start: 0;
+    width: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to bottom,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 12%, transparent)
+    );
+  }
+
+  .edu-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .edu-degree {
+    font-family: var(--font-serif-cn);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    color: var(--color-accent);
+  }
+
+  .edu-school {
+    font-family: var(--font-serif-cn);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-foreground);
+  }
+
+  .edu-sep {
+    flex: none;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--color-muted-foreground);
+    opacity: 0.6;
+  }
+
+  .edu-major {
+    font-family: var(--font-serif-cn);
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    color: var(--color-muted-foreground);
+  }
+
+  .edu-year {
+    margin-inline-start: 1.5rem;
+    font-family: var(--font-serif-cn);
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-foreground);
+  }
+
+  .edu-details {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .edu-details li {
+    font-family: var(--font-serif-cn);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--color-foreground) 84%, transparent);
+  }
+
+  .edu-detail-label {
+    color: var(--color-muted-foreground);
+  }
+
+  .interest-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 1.6rem;
+  }
+
+  .interest-label {
+    font-family: var(--font-serif-cn);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+  }
+
+  .interest-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .interest-tag {
+    padding: 0.32rem 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    font-family: var(--font-serif-cn);
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    color: var(--color-foreground);
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .interest-tag:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  }
+
+  /* ---------- Timeline ---------- */
+  .tl-wrap {
+    --spine-x: calc(8rem + 0.625rem);
+    position: relative;
+    display: flow-root;
+  }
+
+  .tl-arrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--spine-x);
+    width: 12px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .tl-arrow-body {
+    position: absolute;
+    inset: 0;
+    background: var(--color-foreground);
+    opacity: 0.7;
+    clip-path: polygon(
+      50% 0,
+      calc(50% + 5px) 28px,
+      calc(50% + 3px) 28px,
+      calc(50% + 3px) 100%,
+      calc(50% - 3px) 100%,
+      calc(50% - 3px) 28px,
+      calc(50% - 5px) 28px
+    );
+  }
+
+  .tl {
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 0;
+  }
+
+  .tl-date {
+    width: 8rem;
+    flex: none;
+    padding-top: 0.32rem;
+    font-family: var(--font-kai-cn);
+    font-size: 1rem;
+    line-height: 1.7;
+    letter-spacing: 0.05em;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-foreground);
+    transition:
+      color 0.3s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      text-shadow 0.3s ease;
+  }
+
+  .tl-text {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    padding-top: 0.2rem;
+    font-family: var(--font-kai-cn);
+    font-size: 1.15rem;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+    text-align: justify;
+    text-justify: inter-ideograph;
+    transition:
+      color 0.3s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.3s ease;
+  }
+
+  .tl-item.is-active .tl-date {
+    color: var(--color-accent);
+    transform: scale(1.3);
+    transform-origin: right center;
+    text-shadow: 0 0 24px
+      color-mix(in srgb, var(--color-accent) 70%, transparent);
+  }
+
+  .tl-item.is-active .tl-text {
+    color: var(--color-foreground);
+    transform: scale(1.3);
+    transform-origin: left center;
+    filter: brightness(1.22);
+    text-shadow: 0 0 26px
+      color-mix(in srgb, var(--color-foreground) 55%, transparent);
+  }
+
+  @media (max-width: 640px) {
+    .tl-item.is-active .tl-date {
+      transform: scale(1.6);
+    }
+    .tl-item.is-active .tl-text {
+      transform: scale(1.5);
+    }
+  }
+
+  /* ---------- Motion ---------- */
+  .hero-kicker,
+  .hero-title,
+  .hero-lead,
+  .hero-mail {
+    animation: hero-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-title {
+    animation-delay: 0.1s;
+  }
+  .hero-lead {
+    animation-delay: 0.22s;
+  }
+  .hero-mail {
+    animation-delay: 0.34s;
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .tl-item {
+        animation: tl-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 26%;
+      }
+    }
+  }
+
+  @keyframes tl-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-kicker,
+    .hero-title,
+    .hero-lead,
+    .hero-mail,
+    .tl-item {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import {
+    getLenis,
+    setVirtualScrollInterceptor,
+  } from "@/scripts/smoothScroll";
+
+  let tlRaf = 0;
+  let tlBound = false;
+  let tlTargetY: number | null = null;
+
+  function updateTimelineHighlight() {
+    const section = document.getElementById("timeline");
+    if (!section) return;
+    const items = Array.from(section.querySelectorAll("li"));
+    const refLine = window.innerHeight * 0.5;
+    const rect = section.getBoundingClientRect();
+
+    if (refLine < rect.top || refLine > rect.bottom) {
+      items.forEach(li => li.classList.remove("is-active"));
+      return;
+    }
+
+    let best: Element | null = null;
+    let bestDist = Infinity;
+    for (const li of items) {
+      const r = li.getBoundingClientRect();
+      const dist = Math.abs(r.top + r.height / 2 - refLine);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = li;
+      }
+    }
+
+    items.forEach(li => li.classList.toggle("is-active", li === best));
+  }
+
+  function scheduleTimelineHighlight() {
+    if (tlRaf) return;
+    tlRaf = requestAnimationFrame(() => {
+      tlRaf = 0;
+      updateTimelineHighlight();
+    });
+  }
+
+  function nearestIndexForScroll(
+    items: HTMLElement[],
+    scrollY: number,
+    refLine: number
+  ): number {
+    let best = 0;
+    let bestDist = Infinity;
+    items.forEach((li, i) => {
+      const r = li.getBoundingClientRect();
+      const centerDoc = window.scrollY + r.top + r.height / 2;
+      const dist = Math.abs(centerDoc - (scrollY + refLine));
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    return best;
+  }
+
+  // Step the timeline exactly one event per mouse-wheel notch (smoothly),
+  // while trackpads and the rest of the page keep Lenis's free smooth scroll.
+  function interceptTimelineWheel(data: {
+    deltaX: number;
+    deltaY: number;
+    event: WheelEvent | TouchEvent;
+  }): boolean {
+    const lenis = getLenis();
+    if (!lenis) return true;
+    if (data.event.type !== "wheel") return true;
+
+    const wheel = data.event as WheelEvent;
+    const isNotch = wheel.deltaMode !== 0 || Math.abs(data.deltaY) >= 40;
+    if (!isNotch) return true;
+
+    const section = document.getElementById("timeline");
+    if (!section) return true;
+    const items = Array.from(section.querySelectorAll("li")) as HTMLElement[];
+    if (items.length < 2) return true;
+
+    const refLine = window.innerHeight * 0.5;
+    const rect = section.getBoundingClientRect();
+    if (refLine < rect.top || refLine > rect.bottom) {
+      tlTargetY = null;
+      return true;
+    }
+
+    const dir = data.deltaY > 0 ? 1 : -1;
+    const baseY = tlTargetY ?? window.scrollY;
+    const nextIndex = nearestIndexForScroll(items, baseY, refLine) + dir;
+
+    if (nextIndex < 0 || nextIndex >= items.length) {
+      tlTargetY = null;
+      return true;
+    }
+
+    wheel.preventDefault();
+
+    const target = items[nextIndex];
+    const r = target.getBoundingClientRect();
+    tlTargetY = window.scrollY + r.top + r.height / 2 - refLine;
+    lenis.scrollTo(tlTargetY, { duration: 0.5 });
+
+    return false;
+  }
+
+  function initTimeline() {
+    updateTimelineHighlight();
+    tlTargetY = null;
+    setVirtualScrollInterceptor(interceptTimelineWheel);
+    if (tlBound) return;
+    tlBound = true;
+    window.addEventListener("scroll", scheduleTimelineHighlight, {
+      passive: true,
+    });
+    window.addEventListener("resize", scheduleTimelineHighlight, {
+      passive: true,
+    });
+  }
+
+  initTimeline();
+  document.addEventListener("astro:after-swap", initTimeline);
+</script>
