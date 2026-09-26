@@ -9,3 +9,11 @@ class_name = "LikeCounter"
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["LikeCounter"]
+
+# 访客明细数据库（D1）。先执行：
+#   npx wrangler d1 create my-blog-visitors
+# 再把返回的 database_id 填到下面。
+[[d1_databases]]
+binding = "DB"
+database_name = "my-blog-visitors"
+database_id = "51f24303-c1e9-43bc-a2d0-6b9f26367e56"

@@ -20,6 +20,17 @@ const enabled = import.meta.env.PROD || Boolean(PUBLIC_VIEWS_ENDPOINT);
   aria-hidden="true"></span>
 
 <script>
+  const VISITOR_ID_KEY = "visitor-id";
+
+  function getVisitorId() {
+    let id = localStorage.getItem(VISITOR_ID_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(VISITOR_ID_KEY, id);
+    }
+    return id;
+  }
+
   function trackView() {
     const beacon = document.getElementById("view-beacon") as HTMLElement | null;
     if (!beacon || beacon.dataset.enabled !== "true") return;
@@ -27,9 +38,18 @@ const enabled = import.meta.env.PROD || Boolean(PUBLIC_VIEWS_ENDPOINT);
     const endpoint = beacon.dataset.endpoint;
     if (!endpoint) return;
 
+    const payload = {
+      path: location.pathname,
+      referrer: document.referrer,
+      visitorId: getVisitorId(),
+      language: navigator.language,
+      screen: `${window.screen.width}x${window.screen.height}`,
+    };
+
     fetch(`${endpoint}?t=${Date.now()}`, {
       method: "POST",
-      headers: { Accept: "application/json" },
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
       cache: "no-store",
       keepalive: true,
       credentials: "omit",
