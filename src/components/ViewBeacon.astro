@@ -1,0 +1,44 @@
+---
+import { PUBLIC_VIEWS_ENDPOINT } from "astro:env/client";
+
+// 全站浏览量的静默上报器：不渲染任何可见内容。
+// 开发默认直连线上 worker；生产走同域 Pages Function 代理。
+// 开发环境默认不上报，避免本地反复刷新污染线上统计；
+// 设置 PUBLIC_VIEWS_ENDPOINT=http://127.0.0.1:8787/views 可指向本地 worker 调试。
+const LIVE_ENDPOINT = "https://my-blog-likes.delta2024.workers.dev/views";
+const endpoint = import.meta.env.DEV
+  ? PUBLIC_VIEWS_ENDPOINT || LIVE_ENDPOINT
+  : `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}api/views`;
+const enabled = import.meta.env.PROD || Boolean(PUBLIC_VIEWS_ENDPOINT);
+---
+
+<span
+  id="view-beacon"
+  data-endpoint={endpoint}
+  data-enabled={enabled ? "true" : "false"}
+  hidden
+  aria-hidden="true"></span>
+
+<script>
+  function trackView() {
+    const beacon = document.getElementById("view-beacon") as HTMLElement | null;
+    if (!beacon || beacon.dataset.enabled !== "true") return;
+
+    const endpoint = beacon.dataset.endpoint;
+    if (!endpoint) return;
+
+    fetch(`${endpoint}?t=${Date.now()}`, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      keepalive: true,
+      credentials: "omit",
+      mode: "cors",
+    }).catch(() => {
+      // 静默失败：浏览量统计不应影响页面体验。
+    });
+  }
+
+  // ClientRouter 会在首次加载和每次客户端跳转后触发 page-load。
+  document.addEventListener("astro:page-load", trackView);
+</script>

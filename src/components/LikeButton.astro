@@ -7,10 +7,12 @@ type Props = {
   label?: string;
 };
 
-// 本地默认连 `wrangler dev` 起的本地 worker（不出网、不用代理），
-// 可用 PUBLIC_LIKES_ENDPOINT 覆盖；线上走同域 Pages Function 代理。
+// 开发默认直连线上 worker，开箱即用；
+// 想用 `wrangler dev` 的本地 worker，可设 PUBLIC_LIKES_ENDPOINT=http://127.0.0.1:8787。
+// 线上走同域 Pages Function 代理。
+const LIVE_ENDPOINT = "https://my-blog-likes.delta2024.workers.dev";
 const defaultEndpoint = import.meta.env.DEV
-  ? PUBLIC_LIKES_ENDPOINT || "http://127.0.0.1:8787"
+  ? PUBLIC_LIKES_ENDPOINT || LIVE_ENDPOINT
   : `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}api/likes`;
 
 const { endpoint = defaultEndpoint, label = "Like this site" } = Astro.props;
@@ -41,6 +43,15 @@ const { endpoint = defaultEndpoint, label = "Like this site" } = Astro.props;
   >
     —
   </span>
+  <img
+    src="/images/like.png"
+    alt=""
+    aria-hidden="true"
+    width="307"
+    height="205"
+    draggable="false"
+    class="like-hint"
+  />
 </div>
 
 <style>
@@ -61,6 +72,35 @@ const { endpoint = defaultEndpoint, label = "Like this site" } = Astro.props;
     color: var(--color-accent);
     fill: var(--color-accent);
     stroke: var(--color-accent);
+  }
+
+  .like-hint {
+    position: absolute;
+    top: calc(100% - 1rem);
+    right: calc(100% - 0.25rem);
+    width: clamp(75px, 12vw, 153px);
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    transform-origin: 100% 0%;
+    animation: like-hint-float 2.6s ease-in-out infinite;
+  }
+
+  @keyframes like-hint-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .like-hint {
+      animation: none;
+    }
   }
 </style>
 

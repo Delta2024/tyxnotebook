@@ -7,6 +7,7 @@ import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 import MusicPlayer from "@/components/MusicPlayer.astro";
 import CursorFollower from "@/components/CursorFollower.astro";
+import ViewBeacon from "@/components/ViewBeacon.astro";
 import "@/styles/global.css";
 
 type Props = {
@@ -122,6 +123,7 @@ const rssHref = getRelativeLocaleUrl(
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />
+    <ViewBeacon />
     <MusicPlayer />
     <CursorFollower />
     <script>

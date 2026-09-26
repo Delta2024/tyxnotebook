@@ -4,6 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
+import LikeButton from "@/components/LikeButton.astro";
 import AboutNav from "@/components/AboutNav.astro";
 import SleepSchedule from "@/components/SleepSchedule.astro";
 import IconMail from "@/assets/icons/IconMail.svg";
@@ -129,6 +130,8 @@ const bgColumnCount = 5;
   </Fragment>
 
   <Header />
+
+  <LikeButton />
 
   <section
     class="relative isolate flex min-h-[calc(100svh-6rem)] w-full flex-col justify-center overflow-hidden pt-16 pb-20"
